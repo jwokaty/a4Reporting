@@ -1,0 +1,7 @@
+0.0-3
+  o namespace and test file typos
+0.0-2
+  o trivial documentation fix
+  o move appropriate tests/ from a4Base
+0.0-1
+  o first introduction as separate package
