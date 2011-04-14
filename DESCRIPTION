@@ -1,12 +1,13 @@
 Package: a4Reporting
 Type: Package
 Title: Automated Affymetrix Array Analysis Reporting Package
-Version: 1.1.0
+Version: 1.1.1
 Date: 2010-04-06
 Author: Tobias Verbeke
 Maintainer: Tobias Verbeke <tobias.verbeke@openanalytics.eu>
 Description: Automated Affymetrix Array Analysis Reporting Package 
 Depends: methods, annaffy
 Imports: xtable, utils
+biocViews: Bioinformatics, Microarray
 License: GPL-3
 
