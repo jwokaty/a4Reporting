@@ -5,6 +5,21 @@ xtable.topTableGlmnet <- function(x, caption = NULL, label = NULL, align = NULL,
       digits = digits, display = display, ...)
 }
 
+xtable.topTableLognet <- function(x, caption = NULL, label = NULL, align = NULL, 
+    digits = NULL, display = NULL, ...){
+  
+  xtable:::xtable.data.frame(x$topList, caption = caption, label = label, align = align,
+      digits = digits, display = display, ...)
+}
+
+xtable.topTableElnet <- function(x, caption = NULL, label = NULL, align = NULL, 
+    digits = NULL, display = NULL, ...){
+  
+  xtable:::xtable.data.frame(x$topList, caption = caption, label = label, align = align,
+      digits = digits, display = display, ...)
+}
+
+
 xtable.pamClassConfusionTable <- function(x, caption = NULL, label = NULL, align = NULL, 
     digits = NULL, display = NULL, ...){
   

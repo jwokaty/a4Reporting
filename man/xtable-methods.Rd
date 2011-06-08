@@ -5,6 +5,8 @@
 \alias{xtable,annotationTable,ANY,ANY,ANY,ANY,ANY-method}
 \alias{xtable,annotationTable,ANY,ANY,ANY,numeric,ANY-method}
 \alias{xtable.topTableGlmnet}
+\alias{xtable.topTableLognet}
+\alias{xtable.topTableElnet}
 \alias{xtable.pamClassConfusionTable}
 \alias{xtable.topTablePam}
 \title{Methods for Function xtable in Package `annotationTable'}
