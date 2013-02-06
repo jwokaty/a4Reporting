@@ -4,7 +4,7 @@ Title: Automated Affymetrix Array Analysis Reporting Package
 Version: 1.7.0
 Date: 2010-06-08
 Author: Tobias Verbeke
-Maintainer: Tobias Verbeke <tobias.verbeke@openanalytics.eu>
+Maintainer: Tobias Verbeke <tobias.verbeke@openanalytics.eu>, Willem Ligtenberg <willem.ligtenberg@openanalytics.eu>
 Description: Automated Affymetrix Array Analysis Reporting Package 
 Depends: methods, annaffy
 Imports: xtable, utils
