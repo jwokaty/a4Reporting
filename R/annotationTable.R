@@ -40,7 +40,7 @@ setValidity("annotationTable", .annotationTable.valid)
 # utility functions for automatic generation of hrefData
 generateEntrezIdLinks <- function(x){
   # code from annaffy package
-  url <- "http://www.ncbi.nlm.nih.gov/sites/entrez?Db=gene&Cmd=DetailsSearch&Term="
+  url <- "http://www.ncbi.nlm.nih.gov/gene/"
   if (!length(x))
     return(character(0))
   return(paste(url, x, sep = ""))
@@ -48,7 +48,7 @@ generateEntrezIdLinks <- function(x){
 
 generateGOIdLinks <- function(x){
   # code from annaffy package
-  url <- "http://amigo.geneontology.org/cgi-bin/amigo/go.cgi?view=query&query="
+  url <- "http://amigo.geneontology.org/amigo/term/"
   
   if (!length(x))
     return(character(0))
