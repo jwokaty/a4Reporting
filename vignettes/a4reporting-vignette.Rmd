@@ -1,0 +1,47 @@
+---
+title: "Vignette of the a4Reporting package"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{a4Reporting package}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+# Introduction
+
+This document explains the functionalities available in the
+**a4Reporting** package.
+
+
+This package contains utility functions to enhance reporting of data for the Automated Affymetrix Array Analysis 
+suite of packages.
+
+```{r loadLibraries, results = 'hide', echo = FALSE}
+
+	library(a4Reporting)
+
+```
+
+# Create an annotation table
+
+The `annotationTable` function enhances the reporting of table of genes or gene ontology term.
+
+# Top table of classification objects
+
+A few utility functions to enhances the reporting of top tables for
+`glmnet`, `lognet`, `elnet`, `pam` and `pam` classification confusion 
+are available.
+
+# Appendix
+
+## Session information
+
+```{r sessionInformation, echo = FALSE}
+print(sessionInfo())
+```

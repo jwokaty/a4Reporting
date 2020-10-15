@@ -1,3 +1,7 @@
+1.37.1
+  o use Imports rather than Depends + use roxygen2 for documentation
+  o use Authors@R
+  o add vignette
 1.1.1
   o fixes for latest glmnet versions
 1.0.1

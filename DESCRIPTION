@@ -1,14 +1,16 @@
 Package: a4Reporting
 Type: Package
 Title: Automated Affymetrix Array Analysis Reporting Package
-Version: 1.37.0
-Date: 2020-04-03
-Author: Tobias Verbeke
-Maintainer: Tobias Verbeke <tobias.verbeke@openanalytics.eu>,
-  Laure Cougnaud <laure.cougnaud@openanalytics.eu>
-Description: Automated Affymetrix Array Analysis Reporting Package 
-Depends: methods, annaffy
-Imports: xtable, utils
+Version: 1.37.1
+Date: 2020-10-15
+Authors@R: c(
+  person(given = "Tobias", family = "Verbeke", role = "aut", email = "tobias.verbeke@openanalytics.eu"),
+  person(given = "Laure", family = "Cougnaud", role = "cre", email = "laure.cougnaud@openanalytics.eu")
+ )
+Description: Utility functions to facilitate the reporting of the Automated Affymetrix Array Analysis Reporting set of packages.
+Imports: methods, xtable
+Suggests: knitr, rmarkdown
 biocViews: Microarray
 License: GPL-3
-
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
