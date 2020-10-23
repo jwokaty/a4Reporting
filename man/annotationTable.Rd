@@ -26,7 +26,7 @@ object of class 'annotationTable'
 \description{
 This function takes data to be displayed as well as 
 data containing hyperlinks corresponding to displayed
-  data and constructs an object of class annotationTable
+ data and constructs an object of class annotationTable
 }
 \details{
 If \code{hrefData} is given, the \code{displayCols} are not taken into account.

@@ -25,7 +25,7 @@ NULL
 xtable.topTableGlmnet <- function(x, caption = NULL, label = NULL, align = NULL, 
     digits = NULL, display = NULL, ...){
   
-  xtable:::xtable.data.frame(x$topList, caption = caption, label = label, align = align,
+  xtable::xtable(x$topList, caption = caption, label = label, align = align,
       digits = digits, display = display, ...)
 }
 
@@ -36,7 +36,7 @@ xtable.topTableGlmnet <- function(x, caption = NULL, label = NULL, align = NULL,
 xtable.topTableLognet <- function(x, caption = NULL, label = NULL, align = NULL, 
     digits = NULL, display = NULL, ...){
   
-  xtable:::xtable.data.frame(x$topList, caption = caption, label = label, align = align,
+	xtable::xtable(x$topList, caption = caption, label = label, align = align,
       digits = digits, display = display, ...)
 }
 
@@ -47,7 +47,7 @@ xtable.topTableLognet <- function(x, caption = NULL, label = NULL, align = NULL,
 xtable.topTableElnet <- function(x, caption = NULL, label = NULL, align = NULL, 
     digits = NULL, display = NULL, ...){
   
-  xtable:::xtable.data.frame(x$topList, caption = caption, label = label, align = align,
+	xtable::xtable(x$topList, caption = caption, label = label, align = align,
       digits = digits, display = display, ...)
 }
 
@@ -59,7 +59,7 @@ xtable.pamClassConfusionTable <- function(x, caption = NULL, label = NULL, align
     digits = NULL, display = NULL, ...){
   
   # TODO: some preprocessing
-  xtable:::xtable.matrix(x, caption = caption, label = label, align = align,
+	xtable::xtable(as.data.frame(x), caption = caption, label = label, align = align,
       digits = digits, display = display, ...)
 }
 
