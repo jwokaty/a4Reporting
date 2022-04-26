@@ -1,7 +1,7 @@
 Package: a4Reporting
 Type: Package
 Title: Automated Affymetrix Array Analysis Reporting Package
-Version: 1.44.0
+Version: 1.45.0
 Date: 2020-10-15
 Authors@R: c(
   person(given = "Tobias", family = "Verbeke", role = "aut", email = "tobias.verbeke@openanalytics.eu"),
