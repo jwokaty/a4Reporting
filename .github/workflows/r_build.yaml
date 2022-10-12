@@ -1,0 +1,74 @@
+on:
+  workflow_dispatch:
+
+name: All platforms build
+
+jobs:
+  check:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macOS-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+
+    env:
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-tinytex@v2
+
+      - if: runner.os == 'macOS'
+        run: brew install --cask xquartz
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - run: R CMD INSTALL .
+
+      - run: sh -c "R CMD build --keep-empty-dirs --no-resave-data . 2>&1 > /tmp/build.log || true && while grep -q 'not found' /tmp/build.log; do cat /tmp/build.log && Rscript -e 'tinytex::parse_install(\"/tmp/build.log\")' && R CMD build --keep-empty-dirs --no-resave-data . 2>&1 > /tmp/build.log || true; done"
+        continue-on-error: true
+
+      - run: cat /tmp/build.log
+        continue-on-error: true
+
+
+      - uses: r-lib/actions/check-r-package@v2
+        continue-on-error: true
+
+      - run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+        shell: bash
+        id: repo
+
+      - run: |
+          echo ::set-output name=PKG_VERSION::$(grep "Version:" DESCRIPTION | awk -F ': ' '{print $2}')
+        shell: bash
+        id: pkg
+
+      - if: runner.os == 'macOS'
+        run: git clone https://github.com/Bioconductor/BBS && mkdir ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir && cd BBS/utils && gcc chown-rootadmin.c -o chown-rootadmin && sudo chown root:admin chown-rootadmin && sudo chmod 4750 chown-rootadmin && cd ../../ && bash BBS/utils/build-universal.sh ${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz /Library/Frameworks/R.framework/Resources/bin/R ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir
+
+      - if: runner.os == 'macOS'
+        run: R CMD INSTALL --preclean --no-multiarch --library=${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir ${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz
+
+      - run: mkdir -p /tmp && cp ${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz /tmp/${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz"
+          path: "/tmp/${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz"
+
