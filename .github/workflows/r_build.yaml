@@ -65,10 +65,10 @@ jobs:
       - if: runner.os == 'macOS'
         run: R CMD INSTALL --preclean --no-multiarch --library=${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir ${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz
 
-      - run: mkdir -p /tmp && cp ${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz /tmp/${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz
+      - run: mkdir -p /tmp/${{ matrix.config.os }} && cp ${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz /tmp/${{ matrix.config.os }}/${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz
 
       - uses: actions/upload-artifact@v3
         with:
           name: "${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz"
-          path: "/tmp/${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz"
+          path: "/tmp/${{ matrix.config.os }}/${{ matrix.config.os }}-${{ steps.repo.outputs.REPOSITORY_NAME }}_${{ steps.pkg.outputs.PKG_VERSION }}.tar.gz"
 
