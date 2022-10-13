@@ -67,7 +67,10 @@ jobs:
         continue-on-error: true
 
       - if: runner.os == 'macOS'
-        run: git clone https://github.com/Bioconductor/BBS && mkdir ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir && cd BBS/utils && gcc chown-rootadmin.c -o chown-rootadmin && sudo chown root:admin chown-rootadmin && sudo chmod 4750 chown-rootadmin && cd ../../ && bash BBS/utils/build-universal.sh ${{ steps.builtfile.outputs.BUILT }}.tar.gz /Library/Frameworks/R.framework/Resources/bin/R ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir
+        run: |
+          mkdir -p /tmp && git clone https://github.com/Bioconductor/BBS /tmp/BBS && mkdir ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir;
+          (cd /tmp/BBS/utils && gcc chown-rootadmin.c -o chown-rootadmin && sudo chown root:admin chown-rootadmin && sudo chmod 4750 chown-rootadmin);
+          bash /tmp/BBS/utils/build-universal.sh ${{ steps.builtfile.outputs.BUILT }}.tar.gz /Library/Frameworks/R.framework/Resources/bin/R ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir
 
       - if: runner.os == 'macOS'
         run: R CMD INSTALL --preclean --no-multiarch --library=${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir ${{ steps.builtfile.outputs.BUILT }}.tar.gz
@@ -88,9 +91,7 @@ jobs:
       - if: runner.os == 'windows'
         run: mkdir -p /tmp/${{ matrix.config.os }} && cp ${{ steps.builtfile.outputs.BUILT }}.zip /tmp/${{ matrix.config.os }}/${{ matrix.config.os }}-${{ steps.builtfile.outputs.BUILT }}.zip
 
-
       - uses: r-lib/actions/check-r-package@v2
-        continue-on-error: true
 
       - if: runner.os != 'windows'
         uses: actions/upload-artifact@v3
