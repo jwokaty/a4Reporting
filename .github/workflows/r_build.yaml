@@ -19,6 +19,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
       PIP_PKGS: numpy scipy scikit-learn h5py pandas mofapy mofapy2 tensorflow tensorflow_probability torch
       RTOOLS: https://cran.r-project.org/bin/windows/Rtools/rtools43/files/rtools43-5550-5548.exe
+      JAGS: https://www.r-project.org/nosvn/winutf8/ucrt3/extra/jags/JAGS-4.3.0.exe
 
     steps:
       - uses: actions/checkout@v2
@@ -34,6 +35,14 @@ jobs:
 
       - uses: r-lib/actions/setup-tinytex@v2
 
+      - run: pip install ${{ env.PIP_PKGS }}
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+
       # Linux deps
 
       # MacOS deps
@@ -48,8 +57,15 @@ jobs:
           Invoke-WebRequest -Uri ${{ env.RTOOLS }} -OutFile C:\Users\runneradmin\rtools.exe
           C:\Users\runneradmin\rtools.exe /SUPPRESSMSGBOXES /SILENT /DIR=C:\rtools
 
-      - run: |
-          pip install ${{ env.PIP_PKGS }}
+      - name: Install JAGS
+        if: runner.os == 'windows'
+        run: |
+          Invoke-WebRequest -Uri ${{ env.JAGS }} -OutFile C:\Users\runneradmin\jags.exe
+          C:\Users\runneradmin\jags.exe /SUPPRESSMSGBOXES /SILENT /DIR='C:\Program Files\'
+          Get-ChildItem 'C:\Program Files'
+
+
+      # Test containers
 
       - name: Test R environment on Windows
         if: runner.os == 'windows'
@@ -58,13 +74,9 @@ jobs:
           library(BiocManager)
           BiocManager::install(c("IRanges", "Biobase", "zlibbioc", "BiocCheck"), type="source")
           library(BiocCheck)
-          install("Cairo", type="source", INSTALL_opts="--merge-multiarch")
+          install("Cairo", type="source", INSTALL_opts="--merge-multiarch") # Do we still need --merge-multiarch?
         shell: Rscript {0}
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
 
       - run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
         shell: bash
