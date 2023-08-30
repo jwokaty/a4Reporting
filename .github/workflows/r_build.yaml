@@ -17,9 +17,10 @@ jobs:
 
     env:
       R_KEEP_PKG_SOURCE: yes
-      PIP_PKGS: numpy scipy scikit-learn h5py pandas mofapy mofapy2 tensorflow tensorflow_probability torch
+      REQUIREMENtS: https://raw.githubusercontent.com/Bioconductor/BBS/devel/Ubuntu-files/22.04/pip_pkgs.txt  
       RTOOLS: https://cran.r-project.org/bin/windows/Rtools/rtools43/files/rtools43-5550-5548.exe
       JAGS: https://www.r-project.org/nosvn/winutf8/ucrt3/extra/jags/JAGS-4.3.0.exe
+
 
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +36,9 @@ jobs:
 
       - uses: r-lib/actions/setup-tinytex@v2
 
-      - run: pip install ${{ env.PIP_PKGS }}
+      - run: |
+          curl -L ${{ env.REQUIREMENTS }} -o requirements.txt
+          pip install -r requirements.txt
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
