@@ -11,15 +11,19 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,   r: 'release'}
+#          - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
+#          - {os: ubuntu-latest,   r: 'release'}
 
     env:
       R_KEEP_PKG_SOURCE: yes
+      PIP_PKGS: numpy scipy scikit-learn h5py pandas mofapy mofapy2 tensorflow tensorflow_probability torch
+      RTOOLS: https://cran.r-project.org/bin/windows/Rtools/rtools43/files/rtools43-5550-5548.exe
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          repository: Bioconductor/Rhtslib
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -30,8 +34,32 @@ jobs:
 
       - uses: r-lib/actions/setup-tinytex@v2
 
+      # Linux deps
+
+      # MacOS deps
       - if: runner.os == 'macOS'
         run: brew install --cask xquartz
+
+      # Windows deps
+
+      - name: Install Rtools
+        if: runner.os == 'windows'
+        run: |
+          Invoke-WebRequest -Uri ${{ env.RTOOLS }} -OutFile C:\Users\runneradmin\rtools.exe
+          C:\Users\runneradmin\rtools.exe /SUPPRESSMSGBOXES /SILENT /DIR=C:\rtools
+
+      - run: |
+          pip install ${{ env.PIP_PKGS }}
+
+      - name: Test R environment on Windows
+        if: runner.os == 'windows'
+        run: |
+          install.packages("BiocManager", repos="https://cran.r-project.org")
+          library(BiocManager)
+          BiocManager::install(c("IRanges", "Biobase", "zlibbioc", "BiocCheck"), type="source")
+          library(BiocCheck)
+          install("Cairo", type="source", INSTALL_opts="--merge-multiarch")
+        shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -80,10 +108,10 @@ jobs:
         run: R.exe CMD build --keep-empty-dirs --no-resave-data .
 
       - if: runner.os == 'windows'
-        run: mkdir ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir && R.exe CMD INSTALL --merge-multiarch --build --library=${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir ${{ steps.builtfile.outputs.BUILT }}.tar.gz && R.exe CMD INSTALL ${{ steps.builtfile.outputs.BUILT }}.zip && rm ${{ steps.builtfile.outputs.BUILT }}.zip
+        run: mkdir ${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir && R.exe CMD INSTALL --build --library=${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir ${{ steps.builtfile.outputs.BUILT }}.tar.gz && R.exe CMD INSTALL ${{ steps.builtfile.outputs.BUILT }}.zip && rm ${{ steps.builtfile.outputs.BUILT }}.zip
 
       - if: runner.os == 'windows'
-        run: R.exe CMD INSTALL --merge-multiarch --build --library=${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir ${{ steps.builtfile.outputs.BUILT }}.tar.gz
+        run: R.exe CMD INSTALL --build --library=${{ steps.repo.outputs.REPOSITORY_NAME }}.buildbin-libdir ${{ steps.builtfile.outputs.BUILT }}.tar.gz
 
       - if: runner.os != 'windows'
         run: mkdir -p /tmp/${{ matrix.config.os }} && cp ${{ steps.builtfile.outputs.BUILT }}.tar.gz /tmp/${{ matrix.config.os }}/${{ matrix.config.os }}-${{ steps.builtfile.outputs.BUILT }}.tar.gz
